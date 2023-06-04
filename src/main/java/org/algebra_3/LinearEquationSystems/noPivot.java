@@ -24,27 +24,27 @@ public class noPivot {
         }
         return xn;
     }
-    private int[][] descendent(int[][] equations,int step){
-        if(step == equations.length) return equations;
-        for (int i= step;i< equations.length;i++){
-            equations[step][i] = equations[step][i]/equations[step][step];
-        }
-        for(int i=step+1;i< equations.length;i++){
-            for (int j= step; j< equations.length;j++){
-                equations[i][j] = equations[i][j] - equations[i][step]*equations[step][j];
-            }
-        }
-        return descendent(equations,step+1);
+    private int[][] descendent(int[][] equations, int step) {
+        if (step == equations.length) return equations;
 
-    }
-    private void ascendant(){
-        xn[equations.length-1] =equations[equations.length-2][equations.length-1];
-        for(int i = equations.length-3;i>=1;i--){
-            int result = 0;
-            for(int j = i+1; j<=equations.length-2;j++){
-                result+= equations[i][j]*xn[j];
+        for (int i = step + 1; i < equations.length; i++) {
+            int factor = equations[i][step] / equations[step][step];
+            for (int j = step; j < equations.length + 1; j++) {
+                equations[i][j] -= factor * equations[step][j];
             }
-            xn[i] = equations[i][equations.length-1] - result;
+        }
+
+        return descendent(equations, step + 1);
+    }
+    private void ascendant() {
+        xn[equations.length - 1] = equations[equations.length - 1][equations.length] / equations[equations.length - 1][equations.length - 1];
+
+        for (int i = equations.length - 2; i >= 0; i--) {
+            int sum = 0;
+            for (int j = i + 1; j < equations.length; j++) {
+                sum += equations[i][j] * xn[j];
+            }
+            xn[i] = (equations[i][equations.length] - sum) / equations[i][i];
         }
     }
 }
